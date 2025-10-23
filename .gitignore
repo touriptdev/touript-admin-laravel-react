@@ -26,3 +26,4 @@ Thumbs.db
 /frontend/build
 /frontend/dist
 /frontend/.env
+/firebase-merge
