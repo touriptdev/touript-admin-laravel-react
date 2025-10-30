@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.4",
+    "@mui/material": "^7.3.4",
     "@tiptap/extension-heading": "^3.7.1",
     "@tiptap/extension-image": "^3.7.1",
     "@tiptap/extension-link": "^3.7.1",
@@ -21,6 +25,7 @@
     "axios": "^1.12.2",
     "clsx": "^2.1.1",
     "react": "^19.1.1",
+    "react-admin": "^5.12.2",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.4"
   },
