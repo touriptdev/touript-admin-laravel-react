@@ -12,6 +12,7 @@ import PostView from './pages/PostView';
 import PublicEvents from './pages/PublicEvents';
 import EventView from './pages/EventView';
 import AboutUs from './pages/AboutUs';
+import AdminApp from './admin/AdminApp';
 
 export default function App() {
   return (
@@ -28,6 +29,8 @@ export default function App() {
           {/* Public Routes */}
           <Route path="/" element={<div>Home</div>} />
           <Route path="/login" element={<Login />} />
+           {/* <Route path="/admin-app" element={<AdminApp />} /> */}
+           <Route path="/admin-app/*" element={<AdminApp />} />
           <Route path="/blog" element={<PublicBlog />} />
           <Route path="/blog/:slug" element={<PostView />} />
           <Route path="/events" element={<PublicEvents />} />

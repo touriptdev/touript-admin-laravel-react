@@ -10,11 +10,19 @@ export default function Login() {
   const [email, setEmail] = useState('admin@example.com');
   const [password, setPassword] = useState('secret123');
 
-  const submit = async (e) => {
-    e.preventDefault();
-    await login(email, password);
-    navigate('/admin');
-  };
+ const submit = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await login(email, password);
+    console.log("Login response:", res);
+    navigate("/admin-app/");  // you can also use /admin-app/
+  } catch (err) {
+    const status = err?.response?.status ?? "network";
+    const msg = err?.response?.data?.message || err.message || "Login failed";
+    alert(`Login failed (${status}): ${msg}`);
+    console.error("Login error:", err);
+  }
+};
 /*
 const submit = async (e) => {
   e.preventDefault();

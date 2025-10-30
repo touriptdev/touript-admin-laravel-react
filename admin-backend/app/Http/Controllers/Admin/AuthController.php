@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class AuthController extends Controller
     public function me(Request $r) { return $r->user(); }
     public function logout(Request $r) { $r->user()->currentAccessToken()->delete(); return ['ok'=>true]; }
 }
-/*
+*/
 
 // app/Http/Controllers/Admin/AuthController.php
 namespace App\Http\Controllers\Admin;
@@ -78,4 +78,4 @@ class AuthController extends Controller
         ]);
     }
 }
-*/
+

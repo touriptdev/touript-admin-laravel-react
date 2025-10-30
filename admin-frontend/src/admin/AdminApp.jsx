@@ -3,8 +3,8 @@ import { Admin, Resource } from "react-admin";
 import { createTheme } from "@mui/material/styles";
 import dataProvider from "./dataProvider";
 import authProvider from "./authProvider";
-import { PostList, PostEdit, PostCreate, PostShow } from "./resources/posts";
-import { UserList, UserEdit, UserCreate } from "./resources/users";
+import { PostList, PostEdit, PostCreate, PostShow } from "../resources/Posts";
+import { UserList, UserEdit, UserCreate } from "../resources/Users";
 import ArticleIcon from "@mui/icons-material/Article";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
@@ -13,7 +13,7 @@ const theme = createTheme({ palette: { mode: "light" } });
 export default function AdminApp() {
   return (
     <Admin
-      basename="/admin"
+      basename="/admin-app"
       theme={theme}
       dataProvider={dataProvider}
       authProvider={authProvider}
