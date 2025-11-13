@@ -68,7 +68,7 @@ use App\Http\Controllers\Admin\UserController;
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
-    Route::middleware(['auth:sanctum', 'ability:admin']) // or a custom middleware/gate
+    Route::middleware(['auth:sanctum']) // or a custom middleware/gate
         ->group(function () {
             Route::get('/me', [AuthController::class, 'me']);
 
