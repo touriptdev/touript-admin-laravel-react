@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Str; // make sure this is at the top
 
 class PostController extends Controller
 {
@@ -62,31 +63,38 @@ class PostController extends Controller
         ], 201);
     }
 
-    // Update post
-    public function update(Request $request, $id)
-    {
-        $post = Post::findOrFail($id);
+        // Update Post
+        public function update(Request $request, Post $post)
+        {
+            // "sometimes" = only validate if the field is present
+            $validated = $request->validate([
+                'title'       => 'sometimes|required|string|max:255',
+                'slug'        => 'sometimes|required|string|max:255',
+                'content'     => 'sometimes|nullable|string',
+                'cover_image' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            ]);
 
-        $data = $request->validate([
-            'title'       => 'required|string|max:255',
-            'slug'        => 'nullable|string|max:255',
-            'status'      => 'nullable|string|max:50',
-            'body'        => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+            // If a new cover_image file is sent, handle upload
+            if ($request->hasFile('cover_image')) {
+                $path = $request->file('cover_image')->store('images', 'public');
+                $validated['cover_image'] = $path;
+            }
 
-        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
-            $data['cover_image'] = $request->file('cover_image')->store('cover_images', 'public');
-        }
+            // Only update the fields that were provided
+            $post->fill($validated);
+            $post->save();
 
-        $post->update($data);
+            // Make sure we include the URL for the frontend
+            $post->refresh(); // reload with accessors/appends
 
-        return response()->json([
-            'message' => 'Post updated successfully',
-            'data' => $post,
-            'cover_image_url' => isset($data['cover_image']) ? asset('storage/' . $data['cover_image']) : null,
-        ]);
-    }
+            return response()->json([
+                'message'          => 'Post updated successfully',
+                'data'             => $post,
+                'cover_image_url'  => $post->cover_image
+                    ? asset('storage/' . $post->cover_image)
+                    : null,
+            ], 200);
+        }    
 
     // Show single post
     public function show($id)
