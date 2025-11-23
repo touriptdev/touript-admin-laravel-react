@@ -1,26 +1,24 @@
-// src/dataProvider.jsx
 import { fetchUtils } from "react-admin";
 import { getToken } from "./authProvider";
 
-// ✅ HARD-CODED API BASE – Laravel backend
-// const API_BASE = "http://127.0.0.1:8000/api/admin";
-
-// ✅ Relative URL – goes through Vite proxy
-const apiUrl = "/api/admin";
+const apiUrl = "http://localhost:8000/api/admin";
 
 const httpClient = (url, options = {}) => {
   const opts = { ...options };
   opts.headers = opts.headers || new Headers();
 
+  // Add auth header
   const token = getToken();
   if (token) {
     opts.headers.set("Authorization", `Bearer ${token}`);
   }
 
-  // 🔴 Guard: if the URL isn't pointing to our backend API, explode
-  if (!url.startsWith(apiUrl)) {
-    console.error("❌ WRONG URL passed to httpClient:", url);
-    throw new Error("WRONG URL passed to httpClient: " + url);
+  // For JSON requests
+  if (!(opts.body instanceof FormData)) {
+    opts.headers.set("Accept", "application/json");
+    if (opts.method && opts.method !== "GET") {
+      opts.headers.set("Content-Type", "application/json");
+    }
   }
 
   console.log("HTTP", opts.method || "GET", url);
@@ -32,7 +30,6 @@ const hasFile = (data) =>
   Object.values(data).some((v) => v && v.rawFile instanceof File);
 
 const dataProvider = {
-  // LIST: GET /api/admin/posts
   getList: async (resource, params) => {
     const { page, perPage } = params.pagination;
     const { field, order } = params.sort;
@@ -54,22 +51,22 @@ const dataProvider = {
     };
   },
 
-  // GET ONE: GET /api/admin/posts/:id
   getOne: async (resource, params) => {
     const url = `${apiUrl}/${resource}/${params.id}`;
     const { json } = await httpClient(url);
     return { data: json.data ?? json };
   },
 
-  // CREATE: POST /api/admin/posts
   create: async (resource, params) => {
     const url = `${apiUrl}/${resource}`;
+    const data = params.data;
 
-    if (hasFile(params.data)) {
+    // File upload
+    if (hasFile(data)) {
       const formData = new FormData();
-      Object.keys(params.data).forEach((key) => {
-        const value = params.data[key];
-        if (value && value.rawFile instanceof File) {
+      Object.keys(data).forEach((key) => {
+        const value = data[key];
+        if (value?.rawFile instanceof File) {
           formData.append(key, value.rawFile);
         } else if (value !== undefined && value !== null) {
           formData.append(key, value);
@@ -83,53 +80,63 @@ const dataProvider = {
 
       return { data: json.data ?? json };
     }
+
+    // Normal POST
+    const { json } = await httpClient(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    return { data: json.data ?? json };
+  },
+
+  update: async (resource, params) => {
+  const url = `${apiUrl}/${resource}/${params.id}`;
+  const data = { ...params.data };
+
+  // Remove fields that should not be sent to backend
+  delete data.cover_image_url;  // frontend display-only field
+
+  const hasNewFile =
+    data.cover_image &&
+    data.cover_image.rawFile instanceof File;
+
+  // If there is a new file, send multipart/form-data
+  if (hasNewFile) {
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      if (key === "cover_image" && value.rawFile instanceof File) {
+        formData.append("cover_image", value.rawFile);
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    // Laravel requires PUT override
+    formData.append("_method", "PUT");
 
     const { json } = await httpClient(url, {
       method: "POST",
-      body: JSON.stringify(params.data),
-      headers: new Headers({ "Content-Type": "application/json" }),
+      body: formData,
     });
 
     return { data: json.data ?? json };
-  },
+  }
 
-  // UPDATE: PUT (partial update allowed because of "sometimes" rules)
-  update: async (resource, params) => {
-    const url = `${apiUrl}/${resource}/${params.id}`;
-    const payload = params.data || {};
-
-    if (hasFile(payload)) {
-      const formData = new FormData();
-      Object.keys(payload).forEach((key) => {
-        const value = payload[key];
-        if (value && value.rawFile instanceof File) {
-          formData.append(key, value.rawFile);
-        } else if (value !== undefined && value !== null) {
-          formData.append(key, value);
-        }
-      });
-
-      // Use PUT override
-      formData.append("_method", "PUT");
-
-      const { json } = await httpClient(url, {
-        method: "POST",
-        body: formData,
-      });
-
-      return { data: json.data ?? json };
-    }
+    // No new file → send JSON without cover_image
+    delete data.cover_image;
 
     const { json } = await httpClient(url, {
       method: "PUT",
-      body: JSON.stringify(payload),
-      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
     });
 
     return { data: json.data ?? json };
   },
 
-  // DELETE: DELETE /api/admin/posts/:id
+
   delete: async (resource, params) => {
     const url = `${apiUrl}/${resource}/${params.id}`;
     const { json } = await httpClient(url, {
@@ -137,7 +144,7 @@ const dataProvider = {
     });
 
     return { data: json.data ?? { id: params.id } };
-  },
-};
+    },
+  };
 
 export default dataProvider;

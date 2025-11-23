@@ -57,7 +57,7 @@ class PostController extends Controller
         $post = Post::create($data);
 
         return response()->json([
-            'message' => 'Post created successfully',
+            'message' => 'Postcd  created successfully',
             'data' => $post,
             'cover_image_url' => isset($data['cover_image']) ? asset('storage/' . $data['cover_image']) : null,
         ], 201);
