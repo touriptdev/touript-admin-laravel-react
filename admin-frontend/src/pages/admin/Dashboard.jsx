@@ -16,8 +16,6 @@ export default function Dashboard() {
       <ul>
         <li>Users: {stats.users}</li>
         <li>Posts: {stats.posts}</li>
-        <li>Events: {stats.events}</li>
-        <li>Pages: {stats.pages}</li>
       </ul>
     </div>
   );

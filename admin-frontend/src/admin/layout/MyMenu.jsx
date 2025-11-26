@@ -15,8 +15,6 @@ const MyMenu = () => {
       <Divider sx={{ my: 1, mx: open ? 2 : 1 }} />
       <Menu.ResourceItem name="posts" options={{ label: "Posts" }} leftIcon={<ArticleIcon />} />
       <Menu.ResourceItem name="users" options={{ label: "Users" }} leftIcon={<PeopleAltIcon />} />
-      <Menu.Item to="/events" primaryText="Events" leftIcon={<EventIcon />} />
-      <Menu.Item to="/about" primaryText="About" leftIcon={<InfoIcon />} />
     </Menu>
   );
 };

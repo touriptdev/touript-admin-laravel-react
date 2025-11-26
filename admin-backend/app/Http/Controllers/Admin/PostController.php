@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Str; // make sure this is at the top
+// use App\Http\Controllers\Admin\PostResource;
 
 class PostController extends Controller
 {
@@ -110,4 +111,33 @@ class PostController extends Controller
         $post->delete();
         return response()->json(['id' => (int)$id, 'deleted' => true]);
     }
+
+    //Blog Post For Users View
+    // public function publicIndex()
+    // {
+    //     $posts = Post::where('title', true)
+    //                 ->latest()
+    //                 ->paginate(10);
+
+    //     return response()->json($posts);
+    // }
+
+    public function publicIndex()
+    {
+        $posts = Post::latest()->paginate(10);
+        return response()->json($posts);
+    }
+
+    public function publicShow($id)
+    {
+        $post = Post::findOrFail($id);
+
+        // Add cover_image_url
+        $post->cover_image_url = $post->cover_image 
+            ? asset('storage/' . $post->cover_image) 
+            : null;
+
+        return response()->json($post);
+    }
+
 }

@@ -52,22 +52,6 @@ export default function PageRouter() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/admin/events"
-          element={
-            <ProtectedRoute>
-              <Events />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/about"
-          element={
-            <ProtectedRoute>
-              <About />
-            </ProtectedRoute>
-          }
-        />
       </Routes>
     </AuthProvider>
   );
