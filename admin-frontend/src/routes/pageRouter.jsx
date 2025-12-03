@@ -14,6 +14,9 @@ import EventView from "../pages/EventView";
 import AboutUs from "../pages/AboutUs";
 import AdminApp from "../admin/AdminApp";
 
+import PostReCreate from "../pages/PostReCreate";
+
+
 export default function PageRouter() {
   return (
     <AuthProvider>
@@ -35,6 +38,8 @@ export default function PageRouter() {
         <Route path="/events/:slug" element={<EventView />} />
         <Route path="/about-us" element={<AboutUs />} />
 
+        <Route path="/posts/create" element={<PostReCreate />} />
+
         {/* Admin Protected Routes */}
         <Route
           path="/admin"
@@ -52,6 +57,17 @@ export default function PageRouter() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/pages/postrecreate"
+          element={
+            <ProtectedRoute>
+              <PostReCreate />
+            </ProtectedRoute>
+          }
+        />
+
+          
       </Routes>
     </AuthProvider>
   );

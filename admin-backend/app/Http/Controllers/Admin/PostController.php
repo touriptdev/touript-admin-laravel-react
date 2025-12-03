@@ -37,6 +37,7 @@ class PostController extends Controller
     }
 
     // Store post with optional cover image
+    /*
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -67,6 +68,44 @@ class PostController extends Controller
             'cover_image_url' => isset($data['cover_image']) ? asset('storage/' . $data['cover_image']) : null,
         ], 201);
     }
+        */
+
+
+    //for CK Editor Start
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required',
+            'slug' => 'required|unique:posts',
+            'content' => 'required',
+            'images.*' => 'image|mimes:jpg,png,jpeg,webp|max:2048'
+        ]);
+
+        // Save post
+        $post = Post::create($data);
+
+        // Save images if any
+        $uploadedImages = [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $img) {
+                $path = $img->store('posts', 'public');
+                $uploadedImages[] = $path;
+            }
+        }
+
+        // Store image paths in database (optional JSON field)
+        $post->update([
+            'images' => json_encode($uploadedImages)
+        ]);
+
+        return response()->json([
+            'message' => 'Post created successfully',
+            'post' => $post
+        ]);
+    }
+
+    ////for CK Editor END
 
         // Update Post
         public function update(Request $request, Post $post)

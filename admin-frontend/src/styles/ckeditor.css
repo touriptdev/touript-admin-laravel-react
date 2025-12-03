@@ -1,0 +1,20 @@
+.ck-editor__editable {
+    min-height: 400px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important; /* White background */
+    color: #000000 !important; /* Black text */
+}
+
+.ck-editor__main {
+    width: 100% !important;
+}
+
+.ck-editor {
+    width: 100% !important;
+}
+
+.ck-content {
+    background: #ffffff !important;
+    color: #000000 !important;
+}

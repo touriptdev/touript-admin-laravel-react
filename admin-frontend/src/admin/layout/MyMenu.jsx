@@ -15,6 +15,8 @@ const MyMenu = () => {
       <Divider sx={{ my: 1, mx: open ? 2 : 1 }} />
       <Menu.ResourceItem name="posts" options={{ label: "Posts" }} leftIcon={<ArticleIcon />} />
       <Menu.ResourceItem name="users" options={{ label: "Users" }} leftIcon={<PeopleAltIcon />} />
+      {/* <Menu.ResourceItem name="postrecreate" options={{ label: "PostReCreate" }} leftIcon={<ArticleIcon />} /> */}
+      <Menu.ResourceItem name="postrecreate" options={{ label: "Create New (CKEditor)" }} />
     </Menu>
   );
 };
