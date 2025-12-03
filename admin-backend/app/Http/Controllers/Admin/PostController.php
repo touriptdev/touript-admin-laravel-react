@@ -47,9 +47,13 @@ class PostController extends Controller
             'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        if (empty($data['slug'])) {
-            $data['slug'] = \Illuminate\Support\Str::slug($data['title']) . '-' . time();
-        }
+        // if (empty($data['slug'])) {
+        //     $data['slug'] = \Illuminate\Support\Str::slug($data['title']) . '-' . time();
+        // }
+
+         // Generate slug (include user input or title, then add random id)
+        $slugBase = $data['slug'] ?? $data['title'];
+        $data['slug'] = Str::slug($slugBase) . '-' . strtolower(Str::random(6));
 
         if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
             $data['cover_image'] = $request->file('cover_image')->store('cover_images', 'public');
@@ -74,6 +78,11 @@ class PostController extends Controller
                 'content'     => 'sometimes|nullable|string',
                 'cover_image' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ]);
+
+            // If user entered slug, regenerate with random suffix
+            if ($request->filled('slug')) {
+                $validated['slug'] = Str::slug($request->slug) . '-' . strtolower(Str::random(6));
+            }
 
             // If a new cover_image file is sent, handle upload
             if ($request->hasFile('cover_image')) {
