@@ -6,13 +6,14 @@ import { useEffect, useState, ChangeEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
-// import RichTextEditor from "@/app/components/RichTextEditor";
 const RichTextEditor = dynamic(
   () => import("@/app/components/RichTextEditor"),
   { ssr: false }
 );
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
+const API =
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
+  "https://read.touript.com/admin-backend/public/api";
 
 type LoadedPress = {
   id: number;
@@ -55,7 +56,7 @@ export default function AdminPressEditPage() {
         const data: LoadedPress = await res.json();
 
         setTitle(data.title ?? "");
-        setSlug(data.slug ?? ""); 
+        setSlug(data.slug ?? "");
         setContent(data.content ?? "<p>...</p>");
         setCoverPreview(data.cover_image_url ?? null); // show existing image if any
       } catch (err: any) {
@@ -81,7 +82,6 @@ export default function AdminPressEditPage() {
     }
   }
 
-
   async function handleSave() {
     try {
       setSaving(true);
@@ -106,12 +106,10 @@ export default function AdminPressEditPage() {
         formData.append("cover_image", coverImage);
       }
 
-
       const res = await fetch(`${API}/admin/presses/${id}`, {
-        method: "POST", 
+        method: "POST",
         body: formData,
       });
-
 
       if (!res.ok) {
         let message = `Failed to save press (${res.status})`;
@@ -152,7 +150,9 @@ export default function AdminPressEditPage() {
 
   return (
     <div className="space-y-8 px-6 min-w-sm pt-8 lg:px-0">
-      <h1 className="text-xl font-semibold text-gray-900">Edit Press Release</h1>
+      <h1 className="text-xl font-semibold text-gray-900">
+        Edit Press Release
+      </h1>
 
       {error && (
         <div className="rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">

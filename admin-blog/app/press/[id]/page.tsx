@@ -2,7 +2,7 @@
 // app/blog/[id]/page.tsx
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
 
 type PressRelease = {
   id: number;
@@ -28,6 +28,7 @@ async function getPost(id: string): Promise<PressRelease> {
 
   return res.json();
 }
+
 
 export default async function PressPostPage({
   params,

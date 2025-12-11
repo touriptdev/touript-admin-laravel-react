@@ -6,13 +6,12 @@ import { useEffect, useState, ChangeEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
-// import RichTextEditor from "@/app/components/RichTextEditor";
 const RichTextEditor = dynamic(
   () => import("@/app/components/RichTextEditor"),
   { ssr: false }
 );
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
+const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
 
 type LoadedPost = {
   id: number;
@@ -21,6 +20,8 @@ type LoadedPost = {
   content: string | null;
   cover_image_url?: string | null;
 };
+
+
 
 export default function AdminBlogEditPage() {
   const params = useParams<{ id: string }>();
@@ -147,7 +148,6 @@ export default function AdminBlogEditPage() {
       if (coverImage) {
         formData.append("cover_image", coverImage);
       }
-
 
       const res = await fetch(`${API}/admin/posts/${id}`, {
         method: "POST", // 👈 now matches the new POST route
