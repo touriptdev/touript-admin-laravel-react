@@ -77,5 +77,7 @@ class AuthController extends Controller
             'role' => $u->role,
         ]);
     }
+
+    public function logout(Request $r) { $r->user()->currentAccessToken()->delete(); return ['ok'=>true]; }
 }
 

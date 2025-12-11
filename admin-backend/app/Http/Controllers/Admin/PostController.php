@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
-use Illuminate\Support\Str; // make sure this is at the top
-// use App\Http\Controllers\Admin\PostResource;
+use App\Models\User;
+use Illuminate\Support\Str; 
+
 
 class PostController extends Controller
 {
-    // List posts
+
+
+
     public function index(Request $request)
     {
         $perPage = (int) $request->get('per_page', 25);
@@ -21,22 +24,31 @@ class PostController extends Controller
 
         if ($search = $request->get('q')) {
             $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('slug', 'like', "%{$search}%");
+                ->orWhere('slug', 'like', "%{$search}%");
         }
 
         $posts = $query->orderBy($sort, $order)->paginate($perPage);
 
+        $data = $posts->getCollection()->transform(function ($post) {
+            $post->cover_image_url = $post->cover_image
+                ? asset('storage/' . $post->cover_image)
+                : null;
+
+            return $post;
+        });
+
         return response()->json([
-            'data' => $posts->items(),
+            'data' => $data,
             'meta' => [
-                'total' => $posts->total(),
-                'page' => $posts->currentPage(),
-                'per_page' => $posts->perPage(),
+                'total'     => $posts->total(),
+                'page'      => $posts->currentPage(),
+                'per_page'  => $posts->perPage(),
             ],
         ]);
     }
 
-    // Store post with optional cover image
+
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -47,9 +59,21 @@ class PostController extends Controller
             'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        if (empty($data['slug'])) {
-            $data['slug'] = \Illuminate\Support\Str::slug($data['title']) . '-' . time();
+        
+        $slugBase = $data['slug'] ?? $data['title'];
+        $data['slug'] = Str::slug($slugBase) . '-' . strtolower(Str::random(6));
+        
+        $userId = $request->user()->id ?? auth()->id();
+
+        if (!$userId) {
+            $userId = User::whereIn('role', ['admin', 'support'])->value('id');
         }
+
+        if (!$userId) {
+            abort(500, 'No admin/support user found to set as created_by');
+        }
+
+        $data['created_by'] = $userId; 
 
         if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
             $data['cover_image'] = $request->file('cover_image')->store('cover_images', 'public');
@@ -64,10 +88,10 @@ class PostController extends Controller
         ], 201);
     }
 
-        // Update Post
+
         public function update(Request $request, Post $post)
         {
-            // "sometimes" = only validate if the field is present
+
             $validated = $request->validate([
                 'title'       => 'sometimes|required|string|max:255',
                 'slug'        => 'sometimes|required|string|max:255',
@@ -75,18 +99,23 @@ class PostController extends Controller
                 'cover_image' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ]);
 
-            // If a new cover_image file is sent, handle upload
+
+            if ($request->filled('slug')) {
+                $validated['slug'] = Str::slug($request->slug) . '-' . strtolower(Str::random(6));
+            }
+
+
             if ($request->hasFile('cover_image')) {
-                $path = $request->file('cover_image')->store('images', 'public');
+                $path = $request->file('cover_image')->store('cover_images', 'public');
                 $validated['cover_image'] = $path;
             }
 
-            // Only update the fields that were provided
+
             $post->fill($validated);
             $post->save();
 
-            // Make sure we include the URL for the frontend
-            $post->refresh(); // reload with accessors/appends
+
+            $post->refresh(); 
 
             return response()->json([
                 'message'          => 'Post updated successfully',
@@ -97,7 +126,7 @@ class PostController extends Controller
             ], 200);
         }    
 
-    // Show single post
+
     public function show($id)
     {
         $post = Post::findOrFail($id);
@@ -112,15 +141,7 @@ class PostController extends Controller
         return response()->json(['id' => (int)$id, 'deleted' => true]);
     }
 
-    //Blog Post For Users View
-    // public function publicIndex()
-    // {
-    //     $posts = Post::where('title', true)
-    //                 ->latest()
-    //                 ->paginate(10);
-
-    //     return response()->json($posts);
-    // }
+    
 
     public function publicIndex()
     {
