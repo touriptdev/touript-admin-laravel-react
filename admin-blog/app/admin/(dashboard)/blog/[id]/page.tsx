@@ -2,7 +2,7 @@
 // app/blog/[id]/page.tsx
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
 
 type BlogPost = {
   id: number;
@@ -16,8 +16,6 @@ type BlogPost = {
 type BlogParams = {
   id: string;
 };
-
-
 
 async function getPost(id: string): Promise<BlogPost> {
   const res = await fetch(`${API_BASE}/admin/posts/public/${id}`, {

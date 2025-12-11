@@ -18,9 +18,8 @@ const RichTextEditor = dynamic(
   }
 );
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
-
-
+const API =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
 
 export default function AdminPressNewPage() {
   const router = useRouter();
@@ -74,8 +73,6 @@ export default function AdminPressNewPage() {
       if (coverImage) {
         formData.append("cover_image", coverImage);
       }
-
-
 
       const res = await fetch(`${API}/admin/presses`, {
         method: "POST",
@@ -148,7 +145,6 @@ export default function AdminPressNewPage() {
         <label className="mb-1 block text-sm text-gray-700">Content</label>
         <RichTextEditor value={content} onChange={setContent} />
       </div>
-      
 
       <div className="flex items-center justify-center gap-8">
         <button

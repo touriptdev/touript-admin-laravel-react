@@ -17,7 +17,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
 
 type Indicator = { left: number; width: number } | null;
 
@@ -77,8 +77,6 @@ export default function SiteHeader() {
     window.addEventListener("resize", updateIndicator);
     return () => window.removeEventListener("resize", updateIndicator);
   }, [pathname, navItems]);
-
-  
 
   const logoHref = isAdminSection ? "/admin/blog" : "/";
 

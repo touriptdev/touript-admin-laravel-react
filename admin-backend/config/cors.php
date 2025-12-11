@@ -38,6 +38,8 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
+        'https://touript-admin-laravel-next.vercel.app/',
+        'https://read.touript.com',
         'http://localhost:3000',
         'http://localhost:8000',
         'http://127.0.0.1:3000',

@@ -65,7 +65,7 @@ type UiPost = {
 };
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
 
 // Strip trailing "/api" so we can build "http://127.0.0.1:8000/storage/..."
 const API_ORIGIN = API_BASE.replace(/\/api\/?$/, "");
@@ -130,8 +130,6 @@ function getContent(html?: string | null, maxLength = 140): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "…";
 }
-
-
 
 export default async function Press() {
   const posts = await fetchPosts();

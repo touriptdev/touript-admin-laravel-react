@@ -5,7 +5,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent } from "react";
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
+const API =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
 
 const RichTextEditor = dynamic(
   () => import("@/app/components/RichTextEditor"),
@@ -18,8 +19,6 @@ const RichTextEditor = dynamic(
     ),
   }
 );
-
-
 
 export default function AdminBlogNewPage() {
   const router = useRouter();
@@ -73,8 +72,6 @@ export default function AdminBlogNewPage() {
       if (coverImage) {
         formData.append("cover_image", coverImage);
       }
-
-
 
       const res = await fetch(`${API}/admin/posts`, {
         method: "POST",

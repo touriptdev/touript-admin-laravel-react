@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
 
 interface BlogPost {
   id: number;
@@ -52,8 +52,6 @@ function getContent(html?: string | null, maxLength = 140): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "…";
 }
-
-
 
 export default async function AdminBlog() {
   const result = await getPosts();

@@ -11,7 +11,8 @@ const RichTextEditor = dynamic(
   { ssr: false }
 );
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
+const API =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
 
 type LoadedPost = {
   id: number;
@@ -20,8 +21,6 @@ type LoadedPost = {
   content: string | null;
   cover_image_url?: string | null;
 };
-
-
 
 export default function AdminBlogEditPage() {
   const params = useParams<{ id: string }>();

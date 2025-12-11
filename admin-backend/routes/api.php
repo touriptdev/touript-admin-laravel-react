@@ -7,6 +7,10 @@ use App\Http\Controllers\Admin\PressController;
 use App\Http\Controllers\Admin\UserController;
 // use App\Http\Controllers\Admin\PostResource;
 
+Route::get('/ping', function () {
+    return response()->json(['message' => 'pong from Laravel'], 200);
+});
+
 Route::prefix('admin')->group(function () {
     //login
     Route::post('/login', [AuthController::class, 'login']);
