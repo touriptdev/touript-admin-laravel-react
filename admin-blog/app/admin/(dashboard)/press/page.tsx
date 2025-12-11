@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
 
 interface PressRelease {
   id: number;
@@ -52,6 +52,8 @@ function getContent(html?: string | null, maxLength = 140): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "…";
 }
+
+
 
 export default async function AdminPress() {
   const result = await getPresses();

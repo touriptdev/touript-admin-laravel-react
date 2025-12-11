@@ -1,11 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import RichTextEditor from "@/app/components/RichTextEditor";
+import dynamic from "next/dynamic";
+
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent } from "react";
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
+const RichTextEditor = dynamic(
+  () => import("@/app/components/RichTextEditor"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="rounded-md border border-dashed border-gray-200 px-3 py-2 text-xs text-gray-400">
+        Loading editor…
+      </div>
+    ),
+  }
+);
+
+const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/admin-backend/public/api";
+
+
 
 export default function AdminPressNewPage() {
   const router = useRouter();
