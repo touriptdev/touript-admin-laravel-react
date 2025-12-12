@@ -19,7 +19,7 @@ const RichTextEditor = dynamic(
 );
 
 const API =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://adminread.touript.com/api";
 
 export default function AdminPressNewPage() {
   const router = useRouter();

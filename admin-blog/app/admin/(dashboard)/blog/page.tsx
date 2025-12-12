@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://adminread.touript.com/api";
 
 interface BlogPost {
   id: number;

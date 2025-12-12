@@ -65,7 +65,7 @@ type UiPost = {
 };
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://adminread.touript.com/api";
 
 // Strip trailing "/api" so we can build "http://127.0.0.1:8000/storage/..."
 const API_ORIGIN = API_BASE.replace(/\/api\/?$/, "");

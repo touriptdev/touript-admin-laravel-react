@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState, ChangeEvent } from "react";
 
 const API =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://read.touript.com/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://adminread.touript.com/api";
 
 const RichTextEditor = dynamic(
   () => import("@/app/components/RichTextEditor"),
