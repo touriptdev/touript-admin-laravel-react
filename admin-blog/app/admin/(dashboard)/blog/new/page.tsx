@@ -131,7 +131,9 @@ export default function AdminBlogNewPage() {
 
       <div>
         <label className="mb-1 block text-sm text-gray-700">Content</label>
+        <div className ="editor-header-scroll-bar-fixed">
         <RichTextEditor value={content} onChange={setContent} />
+        </div>
       </div>
       {/* <div className="flex items-center justify-center">
         <button
